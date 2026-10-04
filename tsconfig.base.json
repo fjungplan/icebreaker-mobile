@@ -12,6 +12,10 @@
     "isolatedModules": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "@icebreaker/protocol": ["./packages/protocol/src/index.ts"],
+      "@icebreaker/engine": ["./packages/engine/src/index.ts"]
+    }
   }
 }
