@@ -3,7 +3,16 @@ import { z } from 'zod';
 export const PlayerRoleSchema = z.enum(['corp', 'runner']);
 export type PlayerRole = z.infer<typeof PlayerRoleSchema>;
 
-export const ServerTargetSchema = z.enum(['hq', 'rd', 'archives', 'remote1', 'remote2', 'remote3', 'remote4', 'new_remote']);
+export const ServerTargetSchema = z.enum([
+  'hq',
+  'rd',
+  'archives',
+  'remote1',
+  'remote2',
+  'remote3',
+  'remote4',
+  'new_remote',
+]);
 export type ServerTarget = z.infer<typeof ServerTargetSchema>;
 
 // Game Actions

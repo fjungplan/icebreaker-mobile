@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { GameServer } from '../src/index.js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
+import { GameServer } from '../src/index.js';
 
 describe('Authoritative Server', () => {
   let server: GameServer;
@@ -22,11 +22,13 @@ describe('Authoritative Server', () => {
     });
 
     // Send JOIN_MATCH
-    ws.send(JSON.stringify({
-      type: 'JOIN_MATCH',
-      matchId: 'test_match_1',
-      role: 'corp',
-    }));
+    ws.send(
+      JSON.stringify({
+        type: 'JOIN_MATCH',
+        matchId: 'test_match_1',
+        role: 'corp',
+      })
+    );
 
     const response = await new Promise<any>((resolve) => {
       ws.on('message', (data) => {

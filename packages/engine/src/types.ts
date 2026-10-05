@@ -1,7 +1,24 @@
-import { PlayerRole, ServerTarget } from '@icebreaker/protocol';
+import type { PlayerRole, ServerTarget } from '@icebreaker/protocol';
 
-export type CardType = 'agenda' | 'asset' | 'operation' | 'upgrade' | 'ice' | 'event' | 'hardware' | 'resource' | 'program';
-export type Subtype = 'fracter' | 'decoder' | 'killer' | 'ai' | 'barrier' | 'code_gate' | 'sentry' | string;
+export type CardType =
+  | 'agenda'
+  | 'asset'
+  | 'operation'
+  | 'upgrade'
+  | 'ice'
+  | 'event'
+  | 'hardware'
+  | 'resource'
+  | 'program';
+export type Subtype =
+  | 'fracter'
+  | 'decoder'
+  | 'killer'
+  | 'ai'
+  | 'barrier'
+  | 'code_gate'
+  | 'sentry'
+  | string;
 
 export interface CardDefinition {
   id: string;

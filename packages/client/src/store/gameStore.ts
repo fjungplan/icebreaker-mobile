@@ -1,6 +1,6 @@
+import { applyAction, createInitialState, type GameState } from '@icebreaker/engine';
+import type { GameAction, PlayerRole, ServerTarget } from '@icebreaker/protocol';
 import { create } from 'zustand';
-import { createInitialState, applyAction, GameState } from '@icebreaker/engine';
-import { GameAction, PlayerRole, ServerTarget } from '@icebreaker/protocol';
 
 export type DrawerState = 'peek' | 'fan' | 'focus';
 
