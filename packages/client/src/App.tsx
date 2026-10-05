@@ -1,6 +1,6 @@
-import React from 'react';
+import type { ServerTarget } from '@icebreaker/protocol';
+import type React from 'react';
 import { useGameStore } from './store/gameStore.js';
-import { ServerTarget } from '@icebreaker/protocol';
 
 export const App: React.FC = () => {
   const {
@@ -18,7 +18,7 @@ export const App: React.FC = () => {
 
   const isRunner = role === 'runner';
   const myState = isRunner ? gameState.runner : gameState.corp;
-  const oppState = isRunner ? gameState.corp : gameState.runner;
+  const _oppState = isRunner ? gameState.corp : gameState.runner;
   const isMyTurn = gameState.activePlayer === role;
 
   const currentRun = gameState.currentRun;
@@ -31,12 +31,15 @@ export const App: React.FC = () => {
       <header className="flex items-center justify-between px-3 py-2 bg-cyber-panel/90 border-b border-cyber-border text-xs z-20 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => setRole(isRunner ? 'corp' : 'runner')}
             className="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-cyber-border hover:bg-cyber-neonCyan/20 text-cyber-neonCyan border border-cyber-neonCyan/40 transition-colors"
           >
             {role} POV
           </button>
-          <span className="text-gray-400">Turn {gameState.turn} ({gameState.activePlayer})</span>
+          <span className="text-gray-400">
+            Turn {gameState.turn} ({gameState.activePlayer})
+          </span>
         </div>
         <div className="flex items-center gap-3 font-mono">
           <span className="text-cyber-neonYellow">¢ {myState.credits}</span>
@@ -44,7 +47,9 @@ export const App: React.FC = () => {
           {isRunner && (
             <>
               <span className="text-cyber-neonPink">🏷️ {(myState as any).tags}</span>
-              <span className="text-cyber-neonGreen">💾 {(myState as any).maxMU - (myState as any).usedMU} MU</span>
+              <span className="text-cyber-neonGreen">
+                💾 {(myState as any).maxMU - (myState as any).usedMU} MU
+              </span>
             </>
           )}
         </div>
@@ -52,11 +57,14 @@ export const App: React.FC = () => {
 
       {/* Mini-Map Strip: Server Status */}
       <section className="flex items-center gap-2 px-3 py-1.5 bg-black/40 border-b border-cyber-border/40 overflow-x-auto text-[11px] z-10">
-        <span className="text-gray-400 font-semibold uppercase text-[10px] tracking-wide">Servers:</span>
+        <span className="text-gray-400 font-semibold uppercase text-[10px] tracking-wide">
+          Servers:
+        </span>
         {Object.entries(gameState.corp.servers).map(([key, srv]) => {
           const isSelected = selectedServerTarget === key;
           return (
             <button
+              type="button"
               key={key}
               onClick={() => setSelectedServerTarget(key as ServerTarget)}
               className={`px-2 py-1 rounded flex items-center gap-1.5 whitespace-nowrap transition-all ${
@@ -83,7 +91,8 @@ export const App: React.FC = () => {
               [ Tactical Run Breach ]
             </div>
             <div className="text-base font-bold text-white">
-              Target: <span className="text-cyber-neonCyan uppercase">{currentRun.serverTarget}</span>
+              Target:{' '}
+              <span className="text-cyber-neonCyan uppercase">{currentRun.serverTarget}</span>
             </div>
             <div className="text-xs text-gray-300 font-mono">
               Depth: {currentRun.phase.replace('_', ' ')}
@@ -91,6 +100,7 @@ export const App: React.FC = () => {
 
             <div className="flex gap-2 w-full mt-2">
               <button
+                type="button"
                 onClick={() => dispatchAction({ type: 'JACK_OUT', player: 'runner' })}
                 className="flex-1 py-2 rounded bg-cyber-neonPink/20 border border-cyber-neonPink text-cyber-neonPink font-bold text-xs uppercase tracking-wider hover:bg-cyber-neonPink/40 transition-colors"
               >
@@ -102,10 +112,14 @@ export const App: React.FC = () => {
           /* Normal Field View */
           <div className="flex flex-col items-center text-center gap-3">
             <div className="text-sm text-gray-400">
-              Selected Server: <span className="font-bold text-cyber-neonCyan">{selectedServerTarget.toUpperCase()}</span>
+              Selected Server:{' '}
+              <span className="font-bold text-cyber-neonCyan">
+                {selectedServerTarget.toUpperCase()}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => dispatchAction({ type: 'GAIN_CREDIT', player: role })}
                 disabled={!isMyTurn || myState.clicks === 0}
                 className="px-3 py-2 rounded-lg bg-cyber-panel border border-cyber-neonYellow/50 text-cyber-neonYellow text-xs font-bold hover:bg-cyber-neonYellow/20 disabled:opacity-30 disabled:pointer-events-none transition-colors"
@@ -114,7 +128,14 @@ export const App: React.FC = () => {
               </button>
               {isRunner && (
                 <button
-                  onClick={() => dispatchAction({ type: 'INITIATE_RUN', player: 'runner', targetServer: selectedServerTarget })}
+                  type="button"
+                  onClick={() =>
+                    dispatchAction({
+                      type: 'INITIATE_RUN',
+                      player: 'runner',
+                      targetServer: selectedServerTarget,
+                    })
+                  }
                   disabled={!isMyTurn || myState.clicks === 0}
                   className="px-3 py-2 rounded-lg bg-cyber-panel border border-cyber-neonPink/60 text-cyber-neonPink text-xs font-bold hover:bg-cyber-neonPink/20 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                 >
@@ -123,6 +144,7 @@ export const App: React.FC = () => {
               )}
               {isMyTurn && myState.clicks === 0 && (
                 <button
+                  type="button"
                   onClick={() => dispatchAction({ type: 'END_TURN', player: role })}
                   className="px-3 py-2 rounded-lg bg-cyber-neonGreen/20 border border-cyber-neonGreen text-cyber-neonGreen text-xs font-bold hover:bg-cyber-neonGreen/40 transition-colors"
                 >
@@ -137,11 +159,7 @@ export const App: React.FC = () => {
       {/* 3-State Hand Drawer */}
       <div
         className={`fixed left-0 right-0 bottom-0 bg-cyber-panel/95 border-t border-cyber-border backdrop-blur-xl transition-all duration-300 z-30 flex flex-col ${
-          drawerState === 'peek'
-            ? 'h-20'
-            : drawerState === 'fan'
-            ? 'h-[50vh]'
-            : 'h-[75vh]'
+          drawerState === 'peek' ? 'h-20' : drawerState === 'fan' ? 'h-[50vh]' : 'h-[75vh]'
         }`}
       >
         {/* Drawer Header Handle */}
@@ -183,7 +201,9 @@ export const App: React.FC = () => {
               >
                 <div className="text-[11px] font-bold text-white truncate">{card.cardCode}</div>
                 <div className="text-[10px] text-gray-400 font-mono">Cost: 2¢</div>
-                <div className="text-[9px] text-cyber-neonCyan uppercase font-mono">Tap to Inspect</div>
+                <div className="text-[9px] text-cyber-neonCyan uppercase font-mono">
+                  Tap to Inspect
+                </div>
               </div>
             );
           })}
@@ -195,6 +215,7 @@ export const App: React.FC = () => {
             <div className="flex justify-between items-center">
               <span className="text-sm font-bold text-cyber-neonCyan">{focusedCard.cardCode}</span>
               <button
+                type="button"
                 onClick={() => setDrawerState('fan')}
                 className="text-xs text-gray-400 hover:text-white"
               >
@@ -205,6 +226,7 @@ export const App: React.FC = () => {
               Target server: <span className="font-bold text-white">{selectedServerTarget}</span>
             </p>
             <button
+              type="button"
               onClick={() => {
                 alert(`Action initiated for ${focusedCard.cardCode}`);
                 setDrawerState('peek');

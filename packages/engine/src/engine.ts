@@ -1,5 +1,5 @@
-import { GameAction, GameEvent, PlayerRole, ServerTarget } from '@icebreaker/protocol';
-import { GameState, ServerState, CardInstance } from './types.js';
+import type { GameAction, GameEvent, PlayerRole, ServerTarget } from '@icebreaker/protocol';
+import type { CardInstance, GameState, ServerState } from './types.js';
 
 let eventCounter = 0;
 function createEvent(type: GameEvent['type'], payload: Record<string, any>): GameEvent {
@@ -16,14 +16,33 @@ export function createInitialState(gameId = 'game_001'): GameState {
   const initialServers: Record<string, ServerState> = {
     hq: { id: 'srv_hq', name: 'HQ', targetKey: 'hq', isCentral: true, ice: [], root: [] },
     rd: { id: 'srv_rd', name: 'R&D', targetKey: 'rd', isCentral: true, ice: [], root: [] },
-    archives: { id: 'srv_archives', name: 'Archives', targetKey: 'archives', isCentral: true, ice: [], root: [] },
-    remote1: { id: 'srv_remote1', name: 'Remote 1', targetKey: 'remote1', isCentral: false, ice: [], root: [] },
+    archives: {
+      id: 'srv_archives',
+      name: 'Archives',
+      targetKey: 'archives',
+      isCentral: true,
+      ice: [],
+      root: [],
+    },
+    remote1: {
+      id: 'srv_remote1',
+      name: 'Remote 1',
+      targetKey: 'remote1',
+      isCentral: false,
+      ice: [],
+      root: [],
+    },
   };
 
   const sampleCorpHand: CardInstance[] = [
     { instanceId: 'c_hedge_fund_1', cardCode: 'hedge_fund', faceUp: false, counters: 0 },
     { instanceId: 'c_ice_wall_1', cardCode: 'ice_wall', faceUp: false, counters: 0 },
-    { instanceId: 'c_hostile_takeover_1', cardCode: 'hostile_takeover', faceUp: false, counters: 0 },
+    {
+      instanceId: 'c_hostile_takeover_1',
+      cardCode: 'hostile_takeover',
+      faceUp: false,
+      counters: 0,
+    },
   ];
 
   const sampleRunnerHand: CardInstance[] = [
@@ -139,7 +158,10 @@ export function applyAction(
         throw new Error(`Player ${player} deck is empty.`);
       }
       p.clicks -= 1;
-      const drawnCard = p.deck.shift()!;
+      const drawnCard = p.deck.shift();
+      if (!drawnCard) {
+        throw new Error(`Player ${player} deck is empty.`);
+      }
       p.hand.push(drawnCard);
       nextState.log.push(`${player} spent 1 click to draw a card.`);
       events.push(createEvent('CARD_DRAWN', { player, cardId: drawnCard.instanceId }));
@@ -204,7 +226,13 @@ export function applyAction(
         nextState.corp.clicks = 3;
         nextState.log.push(`Runner ended turn. Turn ${nextState.turn} Corp begins.`);
       }
-      events.push(createEvent('TURN_ENDED', { previousPlayer: active, nextPlayer: nextState.activePlayer, turn: nextState.turn }));
+      events.push(
+        createEvent('TURN_ENDED', {
+          previousPlayer: active,
+          nextPlayer: nextState.activePlayer,
+          turn: nextState.turn,
+        })
+      );
       break;
     }
 

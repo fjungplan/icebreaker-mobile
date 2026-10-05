@@ -44,3 +44,13 @@ coverage/
 *.sqlite
 *.sqlite3
 *.db
+
+# Zero-Art Repository Guard: No copyrighted card artwork scans in git (fetched dynamically at runtime)
+packages/**/*.png
+packages/**/*.jpg
+packages/**/*.jpeg
+packages/**/*.webp
+packages/**/*.gif
+!packages/client/public/favicon*
+!packages/client/public/icons/*
+

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { createInitialState, applyAction, getLegalActions, calculateInstallTax } from '../src/index.js';
+import { describe, expect, it } from 'vitest';
+import { applyAction, calculateInstallTax, createInitialState } from '../src/index.js';
 
 describe('Rules Engine', () => {
   it('creates a deterministic initial state with correct click/credit baselines', () => {
@@ -28,7 +28,7 @@ describe('Rules Engine', () => {
   });
 
   it('transitions turns cleanly when clicks are exhausted', () => {
-    let state = createInitialState('test_003');
+    const state = createInitialState('test_003');
     state.corp.clicks = 0;
 
     const { state: nextState, events } = applyAction(state, {
@@ -42,7 +42,7 @@ describe('Rules Engine', () => {
   });
 
   it('handles run initiation and jacking out', () => {
-    let state = createInitialState('test_004');
+    const state = createInitialState('test_004');
     state.activePlayer = 'runner';
 
     const { state: runState, events: runEvents } = applyAction(state, {

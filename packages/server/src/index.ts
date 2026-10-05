@@ -1,6 +1,6 @@
-import { WebSocketServer, WebSocket } from 'ws';
-import { ClientEnvelopeSchema, ServerEnvelope } from '@icebreaker/protocol';
-import { createInitialState, applyAction, GameState } from '@icebreaker/engine';
+import { applyAction, createInitialState, type GameState } from '@icebreaker/engine';
+import { ClientEnvelopeSchema, type ServerEnvelope } from '@icebreaker/protocol';
+import { WebSocket, WebSocketServer } from 'ws';
 
 interface Session {
   ws: WebSocket;
@@ -27,7 +27,13 @@ export class GameServer {
           const parsed = ClientEnvelopeSchema.safeParse(raw);
 
           if (!parsed.success) {
-            ws.send(JSON.stringify({ type: 'ACTION_REJECTED', reason: 'Invalid envelope format', clientSequence: 0 }));
+            ws.send(
+              JSON.stringify({
+                type: 'ACTION_REJECTED',
+                reason: 'Invalid envelope format',
+                clientSequence: 0,
+              })
+            );
             return;
           }
 
@@ -64,13 +70,25 @@ export class GameServer {
 
           if (msg.type === 'SUBMIT_ACTION') {
             if (!currentSession) {
-              ws.send(JSON.stringify({ type: 'ACTION_REJECTED', reason: 'Not joined to any match', clientSequence: msg.clientSequence }));
+              ws.send(
+                JSON.stringify({
+                  type: 'ACTION_REJECTED',
+                  reason: 'Not joined to any match',
+                  clientSequence: msg.clientSequence,
+                })
+              );
               return;
             }
 
             const match = this.matches.get(currentSession.matchId);
             if (!match) {
-              ws.send(JSON.stringify({ type: 'ACTION_REJECTED', reason: 'Match not found', clientSequence: msg.clientSequence }));
+              ws.send(
+                JSON.stringify({
+                  type: 'ACTION_REJECTED',
+                  reason: 'Match not found',
+                  clientSequence: msg.clientSequence,
+                })
+              );
               return;
             }
 
@@ -99,15 +117,19 @@ export class GameServer {
                 }
               }
             } catch (err: any) {
-              ws.send(JSON.stringify({
-                type: 'ACTION_REJECTED',
-                reason: err.message || 'Action failed',
-                clientSequence: msg.clientSequence,
-              }));
+              ws.send(
+                JSON.stringify({
+                  type: 'ACTION_REJECTED',
+                  reason: err.message || 'Action failed',
+                  clientSequence: msg.clientSequence,
+                })
+              );
             }
           }
-        } catch (e: any) {
-          ws.send(JSON.stringify({ type: 'ACTION_REJECTED', reason: 'Malformed JSON', clientSequence: 0 }));
+        } catch (_e: any) {
+          ws.send(
+            JSON.stringify({ type: 'ACTION_REJECTED', reason: 'Malformed JSON', clientSequence: 0 })
+          );
         }
       });
 
